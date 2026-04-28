@@ -10,6 +10,7 @@ pipeline {
 	environment {
 		PYTHONDONTWRITEBYTECODE = '1'
 		PYTHONUNBUFFERED = '1'
+		PYTHONPATH = "${WORKSPACE}" 
 	}
 	
 	stages {
@@ -30,7 +31,7 @@ pipeline {
 		stage('Run Tests') {
 			steps {
 				sh '''
-					pytest test/ -v \
+					pytest tests/ -v \
 					--junitxml=results.xml \
 					--cov=app \
 					--cov-report=xml:coverage.xml
