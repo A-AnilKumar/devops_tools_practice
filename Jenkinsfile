@@ -15,7 +15,7 @@ pipeline {
 	stages {
 		stage('Checkout') {
 			steps {
-				echo "Running on : ${env,NODE_MAME}"
+				echo "Running on : ${env.NODE_MAME}"
 				echo "Branch : ${env.BRANCH_NAME}"
 				echo "Build #: ${env.BUILD_NUMBER}"
 			}
