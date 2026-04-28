@@ -1,24 +1,40 @@
 pipeline {
 
-	agent any
+	agent {
+		docker {
+			image 'python:3.11-slim'
+			args '--user root'
+		}
+	}
+
+	environment {
+		PYTHONDONTWRITEBYTECODE = '1'
+		PYTHONUNBUFFERED = '1'
+	}
 	
 	stages {
 		stage('Checkout') {
 			steps {
-				echo "Code checked out from gitlab"
+				echo "Running on : ${env,NODE_MAME}"
+				echo "Branch : ${env.BRANCH_NAME}"
+				echo "Build #: ${env.BUILD_NUMBER}"
 			}
-			
 		}
 
 		stage('Install Dependencies') {
 			steps {
-				sh 'pip install -r requirements.txt'
+				sh 'pip install -r requirements.txt --quiet'
 			}
 		}
 
 		stage('Run Tests') {
 			steps {
-				sh 'pytest test/ -v --junitxml=results.xml'
+				sh '''
+					pytest test/ -v \
+					--junitxml=results.xml \
+					--cov=app \
+					--cov-report=xml:coverage.xml
+				'''
 			}
 
 			post {
@@ -31,7 +47,7 @@ pipeline {
 	}
 
 	post {
-		success { echo "Build passed!" }
-		failure { echo "Build failed!" }
-	}
+        success { echo "✅ Build #${env.BUILD_NUMBER} passed!" }
+        failure { echo "❌ Build #${env.BUILD_NUMBER} failed!" }
+    }
 }
