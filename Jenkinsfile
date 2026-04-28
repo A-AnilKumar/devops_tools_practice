@@ -10,6 +10,7 @@ pipeline {
 	environment {
 		PYTHONDONTWRITEBYTECODE = '1'
 		PYTHONUNBUFFERED = '1'
+		PYTHONPATH = "${WORKSPACE}" 
 	}
 	
 	stages {
